@@ -1,9 +1,9 @@
-from fruits_service.bd.connection import db
 from bson import ObjectId
+from bd.connection import db
 
 collection = db['fruits']
 
-def insert_fruit(data):
+async def insert_fruit(data: dict) -> str:
     fruit = {
     "name": data.get("name"),
     "color": data.get("color"),
@@ -13,39 +13,29 @@ def insert_fruit(data):
     "last_tracking_timestamp": data.get("last_tracking_timestamp"),
     "count": data.get("count")
     }
-    result = collection.insert_one(data)
+    result = await collection.insert_one(fruit)
     return str(result.inserted_id)
 
-def update_fruit(fruit_id, data):
-    fruit = {
-    "name": data.get("name"),
-    "color": data.get("color"),
-    "type": data.get("type"),
-    "updates": data.get("updates"),
-    "start_tracking_timestamp": data.get("start_tracking_timestamp"),
-    "last_tracking_timestamp": data.get("last_tracking_timestamp"),
-    "count": data.get("count")
-    }
-    result = collection.update_one(
+async def update_fruit(fruit_id: str, data:dict):
+    result = await collection.update_one(
         {"_id": ObjectId(fruit_id)},
         {"$set": data}
     )
     return result.modified_count
 
-def delete_fruit(fruit_id):
-    result = collection.delete_one({"_id": ObjectId(fruit_id)})
+async def delete_fruit(fruit_id: str) -> int:
+    result = await collection.delete_one({"_id": ObjectId(fruit_id)})
     return result.deleted_count
 
-def get_fruit(fruit_id):
-    result = collection.find_one({"_id": ObjectId(fruit_id)})
+async def get_fruit_id(fruit_id: str) -> str:
+    result = await collection.find_one({"_id": ObjectId(fruit_id)})
     if result:
         result["_id"] = str(result["_id"]) 
     return result
 
-def list_fruit():
+async def list_fruit() -> list[dict]:
     fruits = []
-    for result in collection.find():
+    async for result in collection.find():
         result["_id"] = str(result["_id"]) 
         fruits.append(result)
     return fruits
-

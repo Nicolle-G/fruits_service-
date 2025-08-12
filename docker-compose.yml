@@ -1,0 +1,17 @@
+services: 
+  mongo_bd:
+    image: mongo:latest
+    ports: 
+     - "27017:27017"
+    volumes:
+     - mongo_data:/data/db
+
+  fruits_app:
+    build: . 
+    ports:
+      - "5000:5000"
+    environment:
+      - MONGO_URL=mongodb://mongo_bd:27017/fruits
+
+volumes:
+  mongo_data:

@@ -1,5 +1,5 @@
 README
-- This is a REST server built with Flask and MongoDB that performs several CRUD operations, is containerized with Docker, and runs with Docker Compose.
+- This is a REST service built with Flask and MongoDB that performs several CRUD operations, is containerized with Docker, and runs with Docker Compose.
 
 How does it work?
 
